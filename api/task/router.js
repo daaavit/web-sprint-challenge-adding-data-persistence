@@ -1,15 +1,22 @@
-// build your `/api/tasks` router here
-const express = require('express')
-const Tasks = require('./model')
-const router = express.Router()
+const router = require('express').Router()
+const Task = require('./model')
 
-router.get('/', (req, res, next) => {
-    Tasks.getAll()
-        .then((task) => {
-            res.status(200).json(task)
-        })
-        .catch(next)
-})
+router.get('/', async (req, res, next) => {
+    try {
+        const tasks = await Task.findAll();
+        res.status(200).json(tasks)
+    } catch (err) {
+        next(err);
+    }
+});
 
+router.post('/', async (req, res, next) => {
+    try {
+        const task = await Task.insert(req.body);
+        res.status(201).json(task);
+    } catch  (err) {
+        next(err);
+    }
+});
 
-module.exports = router 
+module.exports = router

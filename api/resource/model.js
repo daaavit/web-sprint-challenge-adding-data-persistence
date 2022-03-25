@@ -1,10 +1,10 @@
 const db = require('../../data/dbConfig')
 
-async function getAll () {
+async function findAll () {
     return db('resources');
 }
 
-function getAllById (id) {
+function findById (id) {
     return db('resources')
         .where('resource_id', id)
         .first();
@@ -13,10 +13,10 @@ function getAllById (id) {
 async function insert (resource) {
     const [id] = await db('resources')
         .insert(resource);
-    return getAllById(id)
+    return findById(id)
 }
 
 module.exports = { 
-    getAll, 
+    findAll, 
     insert 
 }

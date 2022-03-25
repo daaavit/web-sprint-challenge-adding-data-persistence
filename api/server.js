@@ -1,17 +1,28 @@
 const express = require('express')
-const ResourcesRouter = require('./resource/router')
-const server = express()
-const TaskRouter = require('./task/router')
 
+const projectRouter = require('./project/router')
+const resourceRouter = require('./resource/router')
+const taskRouter = require('./task/router')
+
+const server = express()
 
 server.use(express.json())
-server.use('/api/resources', ResourcesRouter)
-server.use("/api/projects", ProjectRouter)
-server.use('/api/tasks', TaskRouter)
-server.use((err, req, res, next) => {
-    res.status(err.status || 500).json({
+
+server.use('/api/projects', projectRouter)
+server.use('/api/resources', resourceRouter)
+server.use('/api/tasks', taskRouter)
+
+server.use('*', (req, res, next) => {
+    next({
+        status: 404,
+        message: 'Not Available'
+    })
+})
+
+server.use((err, req, res, next) => { //eslint-disable-line
+    res.status(500).json({
         message: err.message,
-        stack: err.stack
+        stack: err.message
     })
 })
 
